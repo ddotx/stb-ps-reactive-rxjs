@@ -1,0 +1,164 @@
+<div class="card">
+  <div class="card-header">
+    {{ pageTitle }}
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card-body">
+        <form novalidate [formGroup]="productForm">
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="productName"
+              >Product</label
+            >
+            <div class="col-md-8">
+              <input
+                class="form-control"
+                id="productName"
+                type="text"
+                placeholder="Name (required)"
+                formControlName="productName"
+              />
+
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="productCode"
+              >Code</label
+            >
+            <div class="col-md-8">
+              <input
+                class="form-control"
+                id="productCode"
+                type="text"
+                placeholder="Code (required)"
+                formControlName="productCode"
+              />
+
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label"
+                   for="descriptionId">Description</label>
+
+            <div class="col-md-8">
+              <textarea class="form-control"
+                        id="descriptionId"
+                        placeholder="Description"
+                        rows=3
+                        formControlName="description"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="categoryId"
+              >Category</label
+            >
+            <div class="col-md-8">
+              <select class="form-control" id="category" formControlName="categoryId">
+                <option [ngValue]="" selected="selected">Please Select</option>
+                <option [ngValue]=1>1</option>
+                <option [ngValue]=3>3</option>
+                <option [ngValue]=5>5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="price"
+              >Price</label
+            >
+            <div class="col-md-8">
+              <input
+                class="form-control"
+                id="price"
+                type="text"
+                placeholder="Price (required)"
+                formControlName="price">
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="stock"
+              >In Stock</label
+            >
+            <div class="col-md-8">
+              <input
+                class="form-control"
+                id="stock"
+                type="number"
+                placeholder="Stock (required)"
+                formControlName="quantityInStock">
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <div class="offset-md-2 col-md-4">
+              <!-- <button
+                class="btn btn-primary mr-3"
+                style="width:80px;"
+                type="button"
+                [title]="
+                  productForm.valid
+                    ? 'Save your entered data'
+                    : 'Disabled until the form data is valid'
+                "
+                [disabled]="!productForm.valid"
+                (click)="logProduct(productForm)"
+              >
+                LOG
+              </button> -->
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-12">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+                <button
+                class="btn btn-primary mr-3"
+                style="width:auto;"
+                type="submit"
+                [title]="
+                  productForm.valid
+                    ? 'Save your entered data'
+                    : 'Disabled until the form data is valid'
+                "
+                [disabled]="!productForm.valid"
+                (click)="productAdd()"
+              >
+                Add Product
+              </button>
+              <!-- <button
+                class="btn btn-outline-secondary mr-3"
+                style="width:80px;"
+                type="button"
+                title="Cancel your edits"
+                [routerLink]="['/products']"
+              >
+                Cancel
+              </button> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+
+            </div>
+          </div>
+
+
+    </div>
+    </div>
+  </div>
+
+
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>
+
+<!-- {{productForm.value | json}} -->
