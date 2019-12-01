@@ -26,8 +26,10 @@ export class ProductListComponent {
 
   products$ = combineLatest([
 
+    // ! === Fake Product
     // this.productService.productsWithAdd$,
-    // TODO: Refactor to Product from Add Product form
+
+    // TODO: === Form Product
     this.productService.productsAfterPost$,
 
     this.categorySelectedAction$
@@ -65,14 +67,9 @@ export class ProductListComponent {
   constructor(private productService: ProductService,
               private productCategoryService: ProductCategoryService) { }
 
-  onAdd(): void {
-    // this.productService.addProduct();
-    this.productService.addFormProduct();
-  }
-
+  // ! === Fake Product
   onAddFake(): void {
-    this.productService.addProduct();
-    // this.productService.addFormProduct();
+    this.productService.addFakeProduct();
   }
 
   onSelected(categoryId: string): void {

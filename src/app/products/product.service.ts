@@ -25,7 +25,7 @@ export class ProductService {
   // All products
   products$ = this.http.get<Product[]>(this.productsUrl)
     .pipe(
-      tap(data => console.log('Products', JSON.stringify(data))),
+      tap(data => console.log('Get Products', JSON.stringify(data))),
       catchError(this.handleError)
     );
 
@@ -106,20 +106,22 @@ export class ProductService {
   */
 
   // Action Stream
+  // ! === Fake Product
   private productInsertedSubject = new Subject<Product>();
   productInsertedAction$ = this.productInsertedSubject.asObservable();
 
-  // TODO: Action Stream for Added Product from Form
+  // TODO: === Action Stream for Added Product from Form
   private productModifiedSubject = new Subject<Product>();
   productModifiedAction$ = this.productModifiedSubject.asObservable();
 
   // Merge the streams
+  // ! === Fake Product
   productsWithAdd$ = merge(
     this.productsWithCategory$,
     this.productInsertedAction$
   )
     .pipe(
-      tap(product => console.log('In merge', product)),
+      tap(product => console.warn('In merge & Update list - productWithAdd (Fake Product)', product)),
       scan((acc: Product[], value: Product) => [...acc, value]),
       catchError(err => {
         console.error(err);
@@ -127,66 +129,46 @@ export class ProductService {
       })
     );
 
-    // TODO: Save new product => Modify product list
+  // TODO: === Form Product
   productsAfterPost$ = merge(
     this.productsWithCategory$,
     this.productModifiedAction$
       .pipe(
-        tap(product => console.log('In merge', product)),
+        tap(product => console.warn('In merge & Update list - productAfterPost (Form Product)', product)),
         concatMap(product => this.saveProduct(product))
       )
   ).pipe(
-    // TODO: Use scan to combine products and new product
+    // Use scan to combine products and new product
     scan((products: Product[], product: Product) => this.modifyProducts(products, product))
   );
 
-  addProduct(newProduct?: Product) {
-    // newProduct = newProduct || this.fakeProduct();
-    newProduct = this.fakeProduct()
-    console.log('in service', newProduct);
-    // this.productInsertedSubject.next(newProduct);
-    // console.log('in service', newProduct);
-    this.productModifiedSubject.next(newProduct);
+  // ! === Add Fake Product
+  addFakeProduct() {
+    const fakeProduct = this.fakeProduct();
+    console.log('In Service - addFakeProduct', fakeProduct);
+    this.productInsertedSubject.next(fakeProduct);
   }
 
-  addFormProduct(formProduct?: Product) {
-    formProduct = formProduct;
-    console.log('in service', formProduct);
-    this.productModifiedSubject.next(formProduct);
-
+  // TODO: === Add Form Product
+  addProduct(newProduct?: Product) {
+    console.log('In Service - addProduct', newProduct); this.productModifiedSubject.next(newProduct);
   }
 
   saveProduct(product: Product) {
     product.id = null;
-    console.log('before save', product)
+    console.log('Before POST', product);
     const header = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<Product>(this.productsUrl, product, { headers: header })
       .pipe(
-        tap(data => console.log('Product saved to API', JSON.stringify(data))),
+        tap(data => console.warn('Product saved to API', JSON.stringify(data))),
         catchError(this.handleError)
       );
   }
 
-  // TODO: Convert products obj to products array
+  // * Convert products obj to products array
   modifyProducts(products: Product[], product: Product) {
     return [...products, {...product}];
   }
-
-  // FIXME: Refactor
-  // addActualProduct(newProduct?: Product): Observable<void | Product>{
-  //   const data = newProduct;
-  //   console.log('Before Res: ', data)
-  //   const header = new HttpHeaders({'Content-Type': 'application/json'})
-  //   return this.http.post<Product>(this.productsUrl, data, {headers: header})
-  //   .pipe(
-  //     tap(res => console.log('before', JSON.stringify(res))),
-  //     map(
-  //       res => this.productModifiedSubject.next(res)
-  //     ),
-  //     tap(res => console.log('after', JSON.stringify(res))),
-  //     catchError(this.handleError)
-  //   );
-  // }
 
   // Change the selected product
   selectedProductChanged(selectedProductId: number): void {

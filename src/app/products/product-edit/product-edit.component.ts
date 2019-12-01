@@ -19,7 +19,8 @@ export class ProductEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router,
     ) { }
 
   ngOnInit(): void {
@@ -33,37 +34,17 @@ export class ProductEditComponent implements OnInit {
       description: '',
       categoryId: '',
       // [Validators.required, Validators.pattern('^[135]$')]
-
       quantityInStock: ''
-    })
-    console.log(this.productForm.value)
+    });
+    console.error('Init Form', this.productForm.value);
   }
 
-
-  // ngAfterViewInit(): void {
-  //   // Watch for the blur event from any input element on the form.
-  //   // This is required because the valueChanges does not provide notification on blur
-  //   const controlBlurs: Observable<any>[] = this.formInputElements
-  //     .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
-
-  //   // Merge the blur event observable with the valueChanges observable
-  //   // so we only need to subscribe once.
-  //   merge(this.productForm.valueChanges, ...controlBlurs).pipe(
-  //     debounceTime(800)
-  //   ).subscribe(value => {
-  //     this.displayMessage = this.genericValidator.processMessages(this.productForm);
-  //   });
-  // }
-
+  // TODO: === Form Product
   productAdd() {
     const p = this.productForm.value;
-    console.log(p);
-    this.productService.addFormProduct(p)
-    // this.productService.addProduct(p)
+    console.error('Submitted Product', p);
+    this.productService.addProduct(p);
+    this.router.navigate(['products/allproducts']);
   }
-
-  // logProduct(productInput: FormGroup){
-  //   console.log(productInput.value)
-  // }
 
 }
