@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { BehaviorSubject, combineLatest, EMPTY, from, merge, Subject, throwError, of, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, from, merge, Subject, throwError, of, Observable, ReplaySubject } from 'rxjs';
 import { catchError, filter, map, mergeMap, scan, shareReplay, tap, toArray, switchMap, concatMap } from 'rxjs/operators';
 
 import { Product } from './product';
@@ -111,7 +111,7 @@ export class ProductService {
   productInsertedAction$ = this.productInsertedSubject.asObservable();
 
   // TODO: === Action Stream for Added Product from Form
-  private productModifiedSubject = new Subject<Product>();
+  private productModifiedSubject = new ReplaySubject<Product>(1);
   productModifiedAction$ = this.productModifiedSubject.asObservable();
 
   // Merge the streams
@@ -139,7 +139,8 @@ export class ProductService {
       )
   ).pipe(
     // Use scan to combine products and new product
-    scan((products: Product[], product: Product) => this.modifyProducts(products, product))
+    scan((products: Product[], product: Product) => this.modifyProducts(products, product)),
+    tap(console.log)
   );
 
   // ! === Add Fake Product
